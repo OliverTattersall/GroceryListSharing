@@ -1,14 +1,83 @@
-import React from "react";
-import { List } from "../components/List";
-
+import React, {  useContext, useEffect, useState } from "react";
+import { List } from "../components/List/List";
+import { useQuery } from "react-query";
+import './pages.css';
+import { UserContext } from "../App";
+import { NavBurger } from "../components/NavBurger/NavBurger";
+import { getLists, pushNewList, getCurrentUser, checkIfActiveUser } from "../api/api";
+import { useNavigate } from "react-router";
 
 export const Lists = () => {
+    const [addNewListBool, updateAddNewItemBool] = useState(false); 
+    const [newListTitle, updateNewListTitle] = useState('');
+    const userContextObject = useContext(UserContext);
+    const user = useContext(UserContext).currentUser;
+    const navigate = useNavigate();
+    const {data, refetch, error, isError, failureCount} = useQuery({queryFn: getLists, retry:0, queryKey:[{user:user}]});
+
+    const onChange = (event) => {
+        updateNewListTitle(event.target.value);
+    }
+
+    const onSubmit = ()=>{
+        pushNewList(newListTitle, user.username).then(()=>{
+            updateAddNewItemBool(false);
+            refetch();
+        })
+    }
+    useEffect(()=>{
+        console.log('hello');
+        if(!user){
+            setTimeout(()=>{
+                if(checkIfActiveUser()){
+                    userContextObject.refreshUser();
+                }else{
+                    navigate('login');
+                }
+            }, 500);
+        }
+    }, [user]);
+    
+
+    const DELETEME = () => {
+        getCurrentUser().then((res) => {
+            console.log(res);
+            userContextObject.updateCurrentUser(res);
+            console.log(user);
+        })
+    }
+
+    // if(!user) return <></>;
+
+    
+
+    // console.log(data);
 
     return (
-        <div>
-            Test
-            <List></List>
+        <>
+        <button onClick={DELETEME}>LogInUser</button>
+        <NavBurger></NavBurger>
+        <div className="lists-container">
+            <div style={{textAlign:'center'}}>
+                <h1 style={{textDecoration:'underline'}}>Your Shopping Lists</h1>
+            </div>
+            {data?.map((val, idx) => {
+                if(!val) return null;
+                return <List id={val.id} items = {val.items} title = {val.title} owner={val.owner} people={val.people} refetch={refetch} key={idx}></List>
+            })}
+            
+            {addNewListBool ?  
+                <div className="addNewListActive">
+                    <label htmlFor="newListTitleInput">Grocery List Title: </label>
+                    <input type="text" id="newListTitleInput" onChange={onChange} value={newListTitle}/>
+                    <button onClick={onSubmit}>Accept</button>
+                    <button onClick={()=>{updateAddNewItemBool(false)}}>Cancel</button>
+                </div>
+            : <div className="addNewList">
+                    <button className="addNewListButton" onClick={()=>{updateAddNewItemBool(true)}}>Add</button>
+            </div>}
         </div>
+        </>
     );
 
 }
