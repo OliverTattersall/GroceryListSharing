@@ -1,8 +1,8 @@
 import * as Firebase from './firebase';
 import * as noDB from './noDB';
 
-const state = noDB;
-// const state = Firebase;
+// const state = noDB;
+const state = Firebase;
 
 
 // data
