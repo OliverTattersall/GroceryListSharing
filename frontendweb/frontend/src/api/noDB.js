@@ -21,10 +21,7 @@ var testUserInfo = [
     }
 ]
 
-// {title: "Basic Grocery List", creationDate:'value', owner:'owner', people:[], items:[{item:"Test Source", quantity:"small jar"}, 
-//             {item:"Rice", quantity:"1 kg"}, 
-//             {item:"Oranges", quantity:"8"}]
-//         } 
+
 
 
 // data
@@ -64,6 +61,14 @@ export const deleteList = async (listId) => {
     return await true;
 }
 
+export const removeUserFromList = async (listId, user) => {
+    testData[listId].people = testData[listId].people.filter(val=>(val!=user));
+    return await true;
+}
+
+export const addUserToList = async (listId, user) => {
+    testData[listId].people.push(user);
+}
 
 
 //user related
@@ -73,14 +78,6 @@ export const getCurrentUser = async () => {
     return await testUserInfo[0];
 }
 
-export const removeUserFromList = async (listId, user) => {
-    testData[listId].people = testData[listId].people.filter(val=>(val!=user));
-    return await true;
-}
-
-export const addUserToList = async (listId, user) => {
-    testData[listId].people.push(user);
-}
 
 export const login = async (email, password) => {
     return await getCurrentUser();
@@ -94,3 +91,10 @@ export const checkIfActiveUser = () => {
     return true;
 }
 
+export const addFriend = async (friendId) => {
+
+}
+ 
+export const removeFriend = async (friendId) => {
+
+}

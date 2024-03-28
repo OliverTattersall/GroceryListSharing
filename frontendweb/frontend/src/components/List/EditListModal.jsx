@@ -78,7 +78,7 @@ export const EditListModal = ({show, handleClose, ogTitle, listId, refetch, user
                     <Form.Group as={Row}  className="mb-3" controlId="formPlaintextEmail">
                         <Form.Label column>List Title:</Form.Label>
                         <Col md="auto" >
-                            <Form.Control type="text"  defaultValue={title } />
+                            <Form.Control type="text"  defaultValue={title } onChange={onChange}/>
                         </Col>
                     </Form.Group>
                 </Form>

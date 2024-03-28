@@ -1,14 +1,33 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { register } from "../../api/api";
+import { useNavigate } from "react-router";
+import { UserContext } from "../../App";
 
 
 export const Register = () => {
     const [email, updateEmail] = useState(''); 
     const [password, updatePassword] = useState('');
     const [username, updateUsername] = useState('');
+    const userObject = useContext(UserContext); 
+
+    const navigate = useNavigate(); 
 
     const onChange = (updater) => (event) => {
         updater(event.target.value);
     } 
+
+    const handleRegister = async () => {
+      try{
+            const user = await register(email, username, password);
+        
+            if(user){
+                userObject.updateCurrentUser(user);
+                navigate('/');
+            }
+      }catch(err){
+            console.error(err);
+      }
+    }
 
     return (
             <div>
@@ -44,8 +63,8 @@ export const Register = () => {
                 />
               </div>
               <div className="d-grid gap-2 mt-3">
-                <button type="submit" className="btn btn-primary">
-                  Submit
+                <button type="submit" className="btn btn-primary" onClick={handleRegister}>
+                  Register
                 </button>
               </div>
             </div>

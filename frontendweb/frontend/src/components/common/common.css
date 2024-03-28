@@ -1,0 +1,26 @@
+
+.deleteCross{
+    color: red;
+    /* float: right; */
+    margin-right: 0.25em;
+    padding-left: 1px;
+    padding-right: 1px;
+    height: fit-content;
+}
+
+.checkmark{
+    color: green;
+    border: 0.5px solid black;
+}
+
+.htmlEntityButton{
+    /* all:unset; */
+    /* appearance: none; */
+    background-color: white;
+    border: none;
+}
+
+.htmlEntityButton:focus{
+    border: 1px solid black;
+    border-radius: 7px;
+}

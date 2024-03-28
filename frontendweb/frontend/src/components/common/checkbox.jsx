@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Styled from './checkboxstyle.ts';
+import * as Styled from '../checkbox/checkboxstyle.ts';
 
 
 export const Checkbox = ({

@@ -4,8 +4,9 @@ import { useQuery } from "react-query";
 import './pages.css';
 import { UserContext } from "../App";
 import { NavBurger } from "../components/NavBurger/NavBurger";
-import { getLists, pushNewList, getCurrentUser, checkIfActiveUser } from "../api/api";
+import { getLists, pushNewList, getCurrentUser, checkIfActiveUser, addFriend, register } from "../api/api";
 import { useNavigate } from "react-router";
+import { removeFriend } from "../api/firebase";
 
 export const Lists = () => {
     const [addNewListBool, updateAddNewItemBool] = useState(false); 
@@ -20,7 +21,7 @@ export const Lists = () => {
     }
 
     const onSubmit = ()=>{
-        pushNewList(newListTitle, user.username).then(()=>{
+        pushNewList(newListTitle, user.id, user.displayName).then(()=>{
             updateAddNewItemBool(false);
             refetch();
         })
@@ -40,11 +41,15 @@ export const Lists = () => {
     
 
     const DELETEME = () => {
-        getCurrentUser().then((res) => {
-            console.log(res);
-            userContextObject.updateCurrentUser(res);
-            console.log(user);
-        })
+        console.log(user);
+        register('test3@test.com', 'Emma', '123456');
+        // addFriend(user.id, 'NayZ0RUYiFdIKIZj', "Emma");
+        // removeFriend(user.id, 'NayZ0RUYiFdIKIZj', "Emma");
+        // getCurrentUser().then((res) => {
+        //     console.log(res);
+        //     userContextObject.updateCurrentUser(res);
+            
+        // })
     }
 
     // if(!user) return <></>;
@@ -55,7 +60,7 @@ export const Lists = () => {
 
     return (
         <>
-        <button onClick={DELETEME}>LogInUser</button>
+        {/* <button onClick={DELETEME}>LogInUser</button> */}
         <NavBurger></NavBurger>
         <div className="lists-container">
             <div style={{textAlign:'center'}}>

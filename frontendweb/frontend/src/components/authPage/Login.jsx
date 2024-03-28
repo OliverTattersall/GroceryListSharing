@@ -26,7 +26,7 @@ export const Login = (props) => {
         const user = await login(email,password);
         if(user){
             userObject.updateCurrentUser(user);
-            navigate('/profile');
+            navigate('/');
         }
     }
 

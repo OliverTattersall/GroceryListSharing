@@ -17,7 +17,7 @@ export const putListInfo = state.putListInfo; // (listId, name)
 
 export const deleteItemsFromList = state.deleteItemsFromList; // (listId, itemObjs)
 
-export const deleteList = state.deleteList; // (listId)
+export const deleteList = state.deleteList; // (listId, people)
 
 export const removeUserFromList = state.removeUserFromList; // (listId, userId)
 
@@ -31,4 +31,10 @@ export const login = state.login; // (email, password)
 
 export const logout = state.logout; // ()
 
+export const register = state.register; // (email, name, password)
+
 export const checkIfActiveUser = state.checkIfActiveUser; // ()
+
+export const addFriend = state.addFriend // (userId, friendId, userName)
+
+export const removeFriend = state.removeFriend // (userId, friendId, userName)

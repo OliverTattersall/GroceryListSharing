@@ -15,7 +15,7 @@
 }
 
 .newRowInput{
-    width: 35%;
+    width: 25%;
     max-width: 220px;
     display: inline-block;
     margin-left: 10px;
@@ -26,4 +26,8 @@
     width: 50%;
 }
 
+
+.inputBar{
+    width: 100%;
+}
 

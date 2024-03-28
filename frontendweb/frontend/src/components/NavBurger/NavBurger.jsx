@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -8,6 +8,8 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { logout } from '../../api/api';
+import { UserContext } from '../../App';
 
 const StyledLink = styled(Link)`
   font-size: 1.25em;
@@ -20,6 +22,12 @@ const StyledLink = styled(Link)`
 
 export const NavBurger = () => {
     const [expand, updateExpand] = useState(false); 
+    const user = useContext(UserContext);
+
+    const handleLogout = () => {
+      user.updateCurrentUser(null);
+      logout();
+    }
 
     return (
       <div style={{position: 'absolute'}}>
@@ -40,11 +48,9 @@ export const NavBurger = () => {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <StyledLink to="/">Home</StyledLink>
-                  {/* <StyledLink to="/">Home</StyledLink> */}
                   <StyledLink to="/profile">Profile</StyledLink>
-                  <StyledLink to="/login">Sign out</StyledLink>
+                  <StyledLink to="/login" onClick={handleLogout}>Sign out</StyledLink>
                   <StyledLink to="/test">Test</StyledLink>
-                  {/* <Nav.Link href='he'>HE</Nav.Link> */}
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { getAuth, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { delay } from './util';
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -53,8 +53,11 @@ export const getLists = async ( {queryKey}) => {
         docSnap.then((doc)=>{
             // console.log(doc, doc.data());
             const res = doc.data();
-            res.id = listKeys[i];
-            resLists.push(res);
+            if(res){
+                res.id = listKeys[i];
+                resLists.push(res);
+            }
+            
             --resolveCount;
         })
     }
@@ -78,12 +81,18 @@ export const pushItemToList = async (listId, item, quantity) => {
 
 
 export const pushNewList = async (name, ownerId, ownerName) => {
-    await addDoc(db, "Lists", {
+    const docRef = doc(collection(db, "Lists"));
+    const newDoc = await setDoc(docRef, {
         title: name,
         people: [ownerId],
         owner: {id: ownerId, name: ownerName},
         items:[]
     })
+    console.log(newDoc, docRef);
+    await updateDoc(doc(db, "Users", ownerId), {
+        lists : arrayUnion(docRef.id)
+    })
+    return true;
 };
 
 export const putListInfo = async (listId, name) => {
@@ -103,19 +112,33 @@ export const deleteItemsFromList = async (listId, itemObjs) => {
     
 };
 
-export const deleteList = async (listId) => {
+export const deleteList = async (listId, people) => {
+    const batch = writeBatch(db);
+    for(let i = 0; i < people.length; ++i){
+        batch.update(doc(db, "Users", people[i]), {
+            lists:arrayRemove(listId)
+        })
+    }
+    await batch.commit();
     await deleteDoc(doc(db, "Lists", listId));
+
 };
 
 export const removeUserFromList = async (listId, userId) => {
     await updateDoc(doc(db, "Lists", listId), {
         people: arrayRemove(userId)
     })
+    await updateDoc(doc(db, "Users", userId), {
+        lists: arrayRemove(listId)
+    })
 };
 
 export const addUserToList = async (listId, userId) => {
     await updateDoc(doc(db, "Lists", listId), {
         people: arrayUnion(userId)
+    })
+    await updateDoc(doc(db, "Users", userId), {
+        lists: arrayUnion(listId)
     })
 };
 
@@ -158,11 +181,46 @@ export const logout = async () => {
     await signOut(auth);
     return true;
 }
+
+export const register = async (email, name, password) => {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    console.log(res);
+    await setDoc(doc(db, "Users", auth.currentUser.uid), {
+        displayName: name,
+        friends:[],
+        lists:[]
+    });
+    return await getCurrentUser();
+}
+
 export const checkIfActiveUser = () => {
     console.log(auth.currentUser, !!auth.currentUser);
     return !!auth.currentUser;
 }
 
+export const addFriend = async (userId, friendId, userName) => {
+    const docSnap = await getDoc(doc(db, "Users", friendId));
+    if (!docSnap.exists()) throw new Error("Bad friend Id");
+    const friendName = docSnap.data().displayName;
+    await updateDoc(doc(db, "Users", userId), {
+        friends: arrayUnion({id:friendId, name:friendName})
+    });
+    await updateDoc(doc(db, "Users", friendId), {
+        friends: arrayUnion({id: userId, name:userName})
+    });
+}
+
+export const removeFriend = async (userId, friendId, userName) => {
+    const docSnap = await getDoc(doc(db, "Users", friendId));
+    if (!docSnap.exists()) throw new Error("Bad friend Id");
+    const friendName = docSnap.data().displayName;
+    await updateDoc(doc(db, "Users", userId), {
+        friends: arrayRemove({id:friendId, name:friendName})
+    });
+    await updateDoc(doc(db, "Users", friendId), {
+        friends: arrayRemove({id: userId, name:userName})
+    });
+}
 
 
 // test functions

@@ -16,6 +16,7 @@ export const List = ({id, items, title, owner, people, refetch}) => {
     const [showEditModal, updateShowEditModal] = useState(false);
     const [showInfoModal, updateShowInfoModal] = useState(false);
 
+    const userObject = useContext(UserContext);
     const user = useContext(UserContext).currentUser;
 
     const onCheckChange = (itemId) => (val) => {
@@ -26,8 +27,10 @@ export const List = ({id, items, title, owner, people, refetch}) => {
 
     const onDelete = () => {
         let runDelete = window.confirm('Delete This list');
+        console.log(id);
         if(runDelete){
-            deleteList(id).then(()=>{
+            deleteList(id, people).then(async ()=>{
+                await userObject.refreshUser();
                 refetch();
             })
         }
@@ -48,7 +51,7 @@ export const List = ({id, items, title, owner, people, refetch}) => {
             
         })
     }
-    
+
     return (
         <>
         <div className='groceryList'>
