@@ -1,0 +1,33 @@
+.groceryItem {
+    display: inline-block;
+    width: 30%;
+    margin: auto;
+}
+
+.groceryList{
+    margin-bottom: 30px;
+    margin-top: 20px;
+    /* background-color: aqua; */
+}
+
+.accordion-button{
+    background-color: lightblue;
+}
+
+.newRowInput{
+    width: 25%;
+    max-width: 220px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.addUserSelect{
+    width: 50%;
+}
+
+
+.inputBar{
+    width: 100%;
+}
+
