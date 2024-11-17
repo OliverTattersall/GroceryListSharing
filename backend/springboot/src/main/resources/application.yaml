@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: GroceryListApp
+    jwtSecret: ${jwtSecret}
+    jwtExpirationMs: ${jwtExpiration}
+  data:
+    mongodb:
+      uri: ${mongoUrl}
+
+frontend:
+  url: ${frontendUrl}
