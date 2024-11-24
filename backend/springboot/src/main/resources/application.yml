@@ -6,6 +6,5 @@ spring:
   data:
     mongodb:
       uri: ${mongoUrl}
-
 frontend:
-  url: ${frontendUrl}
+  url: http://localhost:3000
