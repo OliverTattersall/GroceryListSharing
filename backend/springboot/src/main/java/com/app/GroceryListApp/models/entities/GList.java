@@ -4,6 +4,7 @@ import com.app.GroceryListApp.models.dtos.Item;
 import com.app.GroceryListApp.models.dtos.ListUser;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "lists")
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GList {
 
     @Id
@@ -32,4 +35,11 @@ public class GList {
 
     private ListUser owner;
 
+    public GList(String listName, User owner){
+        this.listName = listName;
+        this.items = new ArrayList<>();
+        this.listPeopleIds = new ArrayList<>();
+        listPeopleIds.add(owner);
+        this.owner = new ListUser(owner.getId(), owner.getDisplayName());
+    }
 }

@@ -3,6 +3,8 @@ package com.app.GroceryListApp.services;
 import com.app.GroceryListApp.config.jwt.JwtUtils;
 import com.app.GroceryListApp.models.dtos.LoginRequest;
 import com.app.GroceryListApp.models.dtos.LoginResponse;
+import com.app.GroceryListApp.models.entities.User;
+import com.app.GroceryListApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -38,7 +43,6 @@ public class UserService {
             map.put("status", false);
             return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
         }
-
 //      set the authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -51,5 +55,9 @@ public class UserService {
 
         // Return the response entity with the JWT token included in the response body
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtToken).body(response);
+    }
+
+    public User fetchUserById(String id){
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find user by this id"));
     }
 }

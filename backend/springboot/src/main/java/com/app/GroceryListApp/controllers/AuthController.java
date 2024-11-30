@@ -3,9 +3,11 @@ package com.app.GroceryListApp.controllers;
 import com.app.GroceryListApp.config.jwt.JwtUtils;
 import com.app.GroceryListApp.models.dtos.LoginRequest;
 import com.app.GroceryListApp.models.dtos.SignUpRequest;
+import com.app.GroceryListApp.models.dtos.UserInfoDTO;
 import com.app.GroceryListApp.models.entities.User;
 import com.app.GroceryListApp.repositories.UserRepository;
 import com.app.GroceryListApp.services.UserService;
+import com.app.GroceryListApp.util.Mapper;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +57,8 @@ public class AuthController {
 
     // delete this
     @GetMapping("/public/getuserbyemail")
-    public ResponseEntity<User> getByEmail(@RequestParam String email){
-        return ResponseEntity.ok(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found")));
+    public ResponseEntity<UserInfoDTO> getByEmail(@RequestParam String email){
+        return ResponseEntity.ok(Mapper.toUserInfoDTO(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found by that email"))));
     }
 
 }

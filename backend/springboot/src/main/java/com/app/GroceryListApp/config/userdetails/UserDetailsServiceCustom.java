@@ -25,11 +25,12 @@ public class UserDetailsServiceCustom implements UserDetailsService {
         return UserDetailsCustom.build(user);
     }
 
-    public UserDetails loadUserById(String id) throws UsernameNotFoundException{
-        // login by email
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
-
-        return UserDetailsCustom.build(user);
-    }
+//    @Transactional
+//    public UserDetailsCustom loadUserById(String id) throws UsernameNotFoundException{
+//        // login by email
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
+//
+//        return UserDetailsCustom.build(user);
+//    }
 }

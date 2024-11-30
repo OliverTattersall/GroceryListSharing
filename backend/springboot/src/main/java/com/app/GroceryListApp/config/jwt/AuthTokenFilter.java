@@ -1,6 +1,9 @@
 package com.app.GroceryListApp.config.jwt;
 
+import com.app.GroceryListApp.config.userdetails.UserDetailsCustom;
 import com.app.GroceryListApp.config.userdetails.UserDetailsServiceCustom;
+import com.app.GroceryListApp.models.entities.User;
+import com.app.GroceryListApp.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +28,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceCustom userDetailsService;
 
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,8 +39,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request); // parse into a string of header.body.signature from request header
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) { // checks if invalid
                 String id = jwtUtils.getIdFromJwtToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserById(id);
-
+//                UserDetailsCustom userDetails = userDetailsService.loadUserById(id);
+                User user = userService.fetchUserById(id);
+                UserDetailsCustom userDetails = UserDetailsCustom.build(user);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails,
                                 null,
@@ -45,6 +51,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication: {}", e);

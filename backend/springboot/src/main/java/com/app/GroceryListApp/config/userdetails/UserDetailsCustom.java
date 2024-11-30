@@ -18,35 +18,40 @@ import java.util.Objects;
 public class UserDetailsCustom implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private String username;
-    private String email;
+//    private String id;
+//    private String username;
+//    private String email;
+//
+//    @JsonIgnore
+//    private String password;
 
-    @JsonIgnore
-    private String password;
+    private User user;
 
     private boolean is2faEnabled = false;
 
     // will give authorities to users so they can use endpoints
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsCustom(String id, String username, String email, String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+//    public UserDetailsCustom(String id, String username, String email, String password) {
+//        this.id = id;
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//    }
+    public UserDetailsCustom(User user){
+        this.user = user;
     }
 
     // convert userEntity into UserDetailImpl
-    // maybe I could just store a user reference instead??
     public static UserDetailsCustom build(User user) {
 
-        return new UserDetailsCustom(
-                user.getId(),
-                user.getDisplayName(),
-                user.getEmail(),
-                user.getPassword()
-        );
+//        return new UserDetailsCustom(
+//                user.getId(),
+//                user.getDisplayName(),
+//                user.getEmail(),
+//                user.getPassword()
+//        );
+        return new UserDetailsCustom(user);
     }
 
 
@@ -56,23 +61,31 @@ public class UserDetailsCustom implements UserDetails {
     }
 
     public String getId() {
-        return id;
+        return user.getId();
+//        return id;
     }
 
     public String getEmail() {
-        return email;
+        return user.getEmail();
+//        return email;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
+//        return password;
     }
 
     @Override
     public String getUsername() {
-        return id;
+        return user.getId();
+//        return id;
     } // use id in place of username everywhere
 
+    public String getDisplayName(){
+        return user.getDisplayName();
+//        return username;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -103,7 +116,8 @@ public class UserDetailsCustom implements UserDetails {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        UserDetailsCustom user = (UserDetailsCustom) o;
-        return Objects.equals(id, user.id);
+        UserDetailsCustom user2 = (UserDetailsCustom) o;
+        return Objects.equals(user.getId(), user2.getId());
+//        return Objects.equals(id, user2.getId());
     }
 }

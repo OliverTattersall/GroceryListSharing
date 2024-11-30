@@ -1,5 +1,6 @@
 package com.app.GroceryListApp.models.entities;
 
+import com.app.GroceryListApp.models.dtos.ListUser;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -24,8 +25,7 @@ public class User {
 
     private String password;
 
-    @DocumentReference(lazy = true)
-    private List<User> friends = new ArrayList<>();
+    private List<ListUser> friends = new ArrayList<>();
 
     @DocumentReference(lazy = true)
     private List<GList> lists = new ArrayList<>();
@@ -34,6 +34,10 @@ public class User {
         this.displayName = displayName;
         this.email = email;
         this.password = password;
+    }
+
+    public void addList(GList list){
+        lists.add(list);
     }
 
 }

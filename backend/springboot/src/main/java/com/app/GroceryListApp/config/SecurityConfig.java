@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+//@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
     @Value("${frontend.url}")
@@ -55,8 +55,8 @@ public class SecurityConfig {
 //                                .anyRequest().permitAll()
                                 .anyRequest().authenticated()
                 )
-//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)) // setting exception handling to the handler
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // adding jwt filter before password auth
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)) // setting exception handling to the handler
 //                .addFilterBefore(new CustomLoggingFilter(), AuthTokenFilter.class) // makes custom filter happen before authentication
 //            .addFilterAfter(new RequestValidationFilter(), CustomLoggingFilter.class) // adds it right after logging, just for an example
 //            .httpBasic(Customizer.withDefaults());
