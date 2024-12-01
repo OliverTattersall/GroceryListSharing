@@ -42,4 +42,12 @@ public class GList {
         listPeopleIds.add(owner);
         this.owner = new ListUser(owner.getId(), owner.getDisplayName());
     }
+
+    public void addItem(Item item){
+        items.add(item);
+    }
+
+    public void addPerson(User person){
+        listPeopleIds.add(person);
+    }
 }

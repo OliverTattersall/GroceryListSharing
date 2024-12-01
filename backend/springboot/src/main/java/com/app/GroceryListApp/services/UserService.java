@@ -1,6 +1,7 @@
 package com.app.GroceryListApp.services;
 
 import com.app.GroceryListApp.config.jwt.JwtUtils;
+import com.app.GroceryListApp.models.dtos.ListUser;
 import com.app.GroceryListApp.models.dtos.LoginRequest;
 import com.app.GroceryListApp.models.dtos.LoginResponse;
 import com.app.GroceryListApp.models.entities.User;
@@ -59,5 +60,13 @@ public class UserService {
 
     public User fetchUserById(String id){
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find user by this id"));
+    }
+
+    public void addFriend(User user, String friendId) throws RuntimeException{
+        User friend = userRepository.findById(friendId).orElseThrow(() -> new RuntimeException("Friend does not exist"));
+        user.getFriends().add(ListUser.builder().userId(friendId).name(friend.getDisplayName()).build());
+        friend.getFriends().add(ListUser.builder().userId(user.getId()).name(user.getDisplayName()).build());
+        userRepository.save(user);
+        userRepository.save(friend);
     }
 }
